@@ -1,0 +1,4 @@
+maker:
+  build: .
+  volumes:
+    - ./script:/usr/src/app/script

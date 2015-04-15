@@ -1,0 +1,22 @@
+[Unit]
+Description=Sample Nginx Service - {{ tag }}
+
+Requires=docker.service
+After=docker.service
+
+[Service]
+TimeoutStartSec=600
+EnvironmentFile=/etc/environment
+
+ExecStartPre=-/usr/bin/docker kill nginx-{{ tag }}
+ExecStartPre=-/usr/bin/docker rm nginx-{{ tag }}
+ExecStartPre=/usr/bin/docker pull nginx:{{ tag }}
+
+ExecStart=/usr/bin/docker run --name nginx-{{ tag }} \
+-p 80 -e SERVICE_80_NAME=nginx-{{ tag }} \
+nginx:{{ tag }}
+
+ExecStop=/usr/bin/docker stop nginx-{{ tag }}
+
+[X-Fleet]
+Conflicts=nginx-{{ tag }}@*.service
